@@ -1,0 +1,197 @@
+syntax = "proto3";
+
+package drone.mavlink;
+
+option python_generic_services = true;
+option go_package = "github.com/techted89/TechTed89-5G-Cellular-Drone-DIY-Build/shared/proto";
+
+// MAVLink message wrapper for transport over WebRTC data channels
+message MavlinkMessage {
+  uint32 msgid = 1;
+  uint64 timestamp_us = 2;
+  bytes payload = 3;
+  uint8 seq = 4;
+  uint8 sysid = 5;
+  uint8 compid = 6;
+}
+
+// Heartbeat message (MAVLINK_MSG_ID_HEARTBEAT = 0)
+message Heartbeat {
+  uint32 custom_mode = 1;
+  uint8 type = 2;
+  uint8 autopilot = 3;
+  uint8 base_mode = 4;
+  uint8 system_status = 5;
+  uint8 mavlink_version = 6;
+}
+
+// Global position (MAVLINK_MSG_ID_GLOBAL_POSITION_INT = 33)
+message GlobalPositionInt {
+  int32 lat = 1;           // Latitude (degrees * 1e7)
+  int32 lon = 2;           // Longitude (degrees * 1e7)
+  int32 alt = 3;           // Altitude (mm, AMSL)
+  int32 relative_alt = 4;  // Altitude above home (mm)
+  int16 vx = 5;            // Ground X speed (cm/s)
+  int16 vy = 6;            // Ground Y speed (cm/s)
+  int16 vz = 7;            // Ground Z speed (cm/s)
+  uint16 hdg = 8;          // Heading (cdeg)
+}
+
+// Attitude (MAVLINK_MSG_ID_ATTITUDE = 30)
+message Attitude {
+  float roll = 1;
+  float pitch = 2;
+  float yaw = 3;
+  float rollspeed = 4;
+  float pitchspeed = 5;
+  float yawspeed = 6;
+}
+
+// Battery status (MAVLINK_MSG_ID_BATTERY_STATUS = 147)
+message BatteryStatus {
+  uint8 id = 1;
+  uint8 battery_function = 2;
+  uint8 type = 3;
+  int16 temperature = 4;
+  repeated uint16 voltages = 5;
+  int16 current_battery = 6;
+  int32 current_consumed = 7;
+  int32 energy_consumed = 8;
+  int8 battery_remaining = 9;
+}
+
+// RC channels (MAVLINK_MSG_ID_RC_CHANNELS = 65)
+message RcChannels {
+  uint64 time_boot_ms = 1;
+  uint8 chancount = 2;
+  repeated uint16 channels = 3;
+  uint16 rssi = 4;
+}
+
+// Command long (MAVLINK_MSG_ID_COMMAND_LONG = 76)
+message CommandLong {
+  uint8 target_system = 1;
+  uint8 target_component = 2;
+  uint16 command = 3;
+  uint8 confirmation = 4;
+  float param1 = 5;
+  float param2 = 6;
+  float param3 = 7;
+  float param4 = 8;
+  float param5 = 9;
+  float param6 = 10;
+  float param7 = 11;
+}
+
+// Command ack (MAVLINK_MSG_ID_COMMAND_ACK = 77)
+message CommandAck {
+  uint16 command = 1;
+  uint8 result = 2;
+  uint8 progress = 3;
+  int32 result_param2 = 4;
+}
+
+// Mission item (MAVLINK_MSG_ID_MISSION_ITEM = 39)
+message MissionItem {
+  uint16 seq = 1;
+  uint8 frame = 2;
+  uint16 command = 3;
+  uint8 current = 4;
+  uint8 autocontinue = 5;
+  float param1 = 6;
+  float param2 = 7;
+  float param3 = 8;
+  float param4 = 9;
+  float x = 10;
+  float y = 11;
+  float z = 12;
+  uint8 mission_type = 13;
+}
+
+// RTH configuration
+message RthConfig {
+  float min_altitude = 1;           // Minimum RTH altitude (meters)
+  float max_altitude = 2;           // Maximum RTH altitude (meters)
+  float descent_rate = 3;           // Descent rate (m/s)
+  float approach_speed = 4;         // Approach speed (m/s)
+  bool dynamic_altitude = 5;        // Enable dynamic altitude based on obstacles
+  float obstacle_clearance = 6;     // Obstacle clearance (meters)
+  bool precision_landing = 7;       // Use precision landing if available
+}
+
+// SMS emergency beacon message
+message SmsBeacon {
+  string phone_number = 1;
+  string message = 2;
+  double latitude = 3;
+  double longitude = 4;
+  float altitude = 5;
+  uint64 timestamp = 6;
+  uint8 severity = 7;  // 1=info, 2=warning, 3=critical
+}
+
+// Telemetry data packet for ground station
+message TelemetryPacket {
+  uint64 timestamp_us = 1;
+  GlobalPositionInt position = 2;
+  Attitude attitude = 3;
+  BatteryStatus battery = 4;
+  Heartbeat heartbeat = 5;
+  RcChannels rc_channels = 6;
+  float airspeed = 7;
+  float groundspeed = 8;
+  float climb_rate = 9;
+  uint32 flight_mode = 10;
+  bool armed = 11;
+  bool failsafe_active = 12;
+  string failsafe_reason = 13;
+}
+
+// Video frame metadata
+message VideoFrameMetadata {
+  uint64 timestamp_us = 1;
+  uint32 width = 2;
+  uint32 height = 3;
+  uint32 frame_size = 4;
+  uint8 codec = 5;  // 0=H264, 1=H265, 2=VP8, 3=VP9
+  uint32 sequence = 6;
+  bool keyframe = 7;
+}
+
+// Control command from ground to drone
+message ControlCommand {
+  enum CommandType {
+    UNKNOWN = 0;
+    ARM = 1;
+    DISARM = 2;
+    SET_MODE = 3;
+    GOTO = 4;
+    RTL = 5;
+    LAND = 6;
+    TAKEOFF = 7;
+    SET_RTH_CONFIG = 8;
+    EMERGENCY_STOP = 9;
+    CAMERA_CONTROL = 10;
+    PAYLOAD_RELEASE = 11;
+  }
+  CommandType type = 1;
+  float param1 = 2;
+  float param2 = 3;
+  float param3 = 4;
+  float param4 = 5;
+  float param5 = 6;
+  float param6 = 7;
+  float param7 = 8;
+  string custom_data = 9;
+}
+
+// Drone status for API
+message DroneStatus {
+  string drone_id = 1;
+  TelemetryPacket telemetry = 2;
+  string connection_status = 3;  // "connected", "disconnected", "reconnecting"
+  uint64 last_seen_us = 4;
+  string tailscale_ip = 5;
+  bool webrtc_connected = 6;
+  uint32 latency_ms = 7;
+}

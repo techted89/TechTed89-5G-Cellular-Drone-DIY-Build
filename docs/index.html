@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hardware Guide — TechTed89 5G Cellular Drone</title>
+  <meta name="description" content="Comprehensive hardware selection guide for the open-source 5G drone flight controller & telemetry server project.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Skip to content -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">🛩️</span>
+        <span class="brand-name">5G Drone Hardware Guide</span>
+      </a>
+      <nav class="nav">
+        <a href="#companion-computers">SBC / Companion</a>
+        <a href="#flight-controllers">Flight Controllers</a>
+        <a href="#5g-modems">5G / Cellular</a>
+        <a href="#lorawan">LoRaWAN</a>
+        <a href="#addon-boards">HATs / Add-ons</a>
+        <a href="#power-train">Power & Motors</a>
+        <a href="#build-plans">Build Plans</a>
+        <a href="#gallery">Gallery</a>
+        <a href="https://github.com/techted89/TechTed89-5G-Cellular-Drone-DIY-Build" class="nav-link nav-link--ghost">View on GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <h1>Choose Your Build</h1>
+      <p class="lead">Open-source 5G drone flight controller & telemetry server. Split-brain architecture (SBC + FC), Tailscale VPS mesh for CGNAT bypass, WebRTC video, duplex MAVLink, dynamic RTH failsafes, SMS emergency beacons. Built for BVLOS.</p>
+      <div class="hero-actions">
+        <a href="#build-plans" class="btn btn--primary">Build Plans</a>
+        <a href="#comparison" class="btn btn--outline">Compare Boards</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Table -->
+  <section id="comparison" class="section section--table">
+    <div class="container">
+      <h2>Hardware Comparison</h2>
+      <p>Quick reference across SBCs, FCs, and cellular modules.</p>
+      <div class="table-wrapper">
+        <table class="data-table" id="hardware-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Model</th>
+              <th>Price (USD)</th>
+              <th>Key Specs</th>
+              <th>Best For</th>
+              <th>Buy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="badge category--sbc">SBC</td>
+              <td><strong>Raspberry Pi 5 (8GB)</strong></td>
+              <td>$80–$100</td>
+              <td>2.4GHz 64-bit quad-core ARM, 8GB RAM, PCIe Gen 2, CSI/DSI</td>
+              <td>Balanced price/performance, WebRTC video encoding</td>
+              <td><a href="https://www.raspberrypi.com/products/raspberry-pi-5/" target="_blank" rel="noopener">RPi</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--sbc">SBC</td>
+              <td><strong>NVIDIA Jetson Orin Nano Super</strong></td>
+              <td>$249</td>
+              <td>ARM Cortex-A78AE, 8GB RAM, 1024-core GPU, 67 TOPS AI, PCIe Gen 4</td>
+              <td>AI/ML onboard, computer vision, hardware-accelerated H.264/H.265</td>
+              <td><a href="https://www.nvidia.com/en-us/autonomous-machines/jetson-orin-nano-super-developer-kit/" target="_blank" rel="noopener">NVIDIA</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--sbc">SBC</td>
+              <td><strong>Odroid M1S</strong></td>
+              <td>$87</td>
+              <td>Rockchip RK3576, 4GB/8GB LPDDR4X, PCIe 2.1, Gigabit Ethernet</td>
+              <td>Low power, M.2 NVMe, good Pi alternative</td>
+              <td><a href="https://www.hardkernel.com/shop/odroid-m1s/" target="_blank" rel="noopener">Hardkernel</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--sbc">SBC</td>
+              <td><strong>Orange Pi 5</strong></td>
+              <td>$72–$110</td>
+              <td>Rockchip RK3588S, up to 32GB RAM, M.2 PCIe 2.1, 8K video decode</td>
+              <td>Budget high-performance, lots of RAM</td>
+              <td><a href="https://www.orangepi.org/" target="_blank" rel="noopener">Orange Pi</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--fc">FC</td>
+              <td><strong>Holybro Pixhawk 6C</strong></td>
+              <td>$199–$300</td>
+              <td>STM32H743, triple IMU, dual baro, 5x UART, CAN, ArduPilot/PX4</td>
+              <td>Open-source autopilot standard, reliable FC + SBC split-brain</td>
+              <td><a href="https://holybro.com/products/pixhawk-6c" target="_blank" rel="noopener">Holybro</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--fc">FC</td>
+              <td><strong>Holybro Pixhawk 6X</strong></td>
+              <td>$269+</td>
+              <td>STM32H753, triple-redundant IMU, RTK-ready, dual CAN, Ethernet</td>
+              <td>Industrial-grade, professional BVLOS builds</td>
+              <td><a href="https://holybro.com/products/pixhawk-6x" target="_blank" rel="noopener">Holybro</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--fc">FC</td>
+              <td><strong>Cube Orange+</strong></td>
+              <td>$450–$800</td>
+              <td>STM32H743, triple IMU w/ vibration isolation, 80-pin modular connector</td>
+              <td>Premium industrial reliability, research & commercial</td>
+              <td><a href="https://cubepilot.org/cube-orange.html" target="_blank" rel="noopener">CubePilot</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--fc">FC</td>
+              <td><strong>Holybro Kakute H7</strong></td>
+              <td>$72–$99</td>
+              <td>STM32H743, barometer, 6 UARTs, ArduPilot/PX4 compatible</td>
+              <td>Budget industrial-class FC, small frames</td>
+              <td><a href="https://holybro.com/products/kakute-h7" target="_blank" rel="noopener">Holybro</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--modem">5G Modem</td>
+              <td><strong>Quectel RM520N-GL (eSIM)</strong></td>
+              <td>$120–$180</td>
+              <td>M.2 B-key, 5G NR Sub-6, eUICC/eSIM, USB 3.1, dual SIM</td>
+              <td>eSIM for remote provisioning, dual-SIM failover</td>
+              <td><a href="https://quectel.com/" target="_blank" rel="noopener">Quectel</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--modem">5G Modem</td>
+              <td><strong>Quectel RM500Q-GL</strong></td>
+              <td>$90–$140</td>
+              <td>M.2 B-key, 5G NR Sub-6, physical nano-SIM, USB 3.1</td>
+              <td>Most affordable 5G, physical SIM simplicity</td>
+              <td><a href="https://quectel.com/" target="_blank" rel="noopener">Quectel</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--modem">5G Modem</td>
+              <td><strong>SIM7600XX-M.2</strong></td>
+              <td>$60–$100</td>
+              <td>M.2 B-key, LTE Cat 16 (4G), USB 2.0, GPS</td>
+              <td>Cheapest cellular option where 5G not needed</td>
+              <td><a href="https://www.simcom.io/" target="_blank" rel="noopener">SIMCom</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--camera">Camera</td>
+              <td><strong>Raspberry Pi Camera Module 3</strong></td>
+              <td>$25–$50</td>
+              <td>IMX708, 12MP, HDR, 1080p50/720p100, CSI-2</td>
+              <td>Pi-native, lightweight, GStreamer/v4l2 compatible</td>
+              <td><a href="https://www.raspberrypi.com/products/camera-module-3/" target="_blank" rel="noopener">RPi</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--camera">Camera</td>
+              <td><strong>Arducam IMX477 (HQ)</strong></td>
+              <td>$50</td>
+              <td>Sony IMX477, 12.3MP, C/CS mount, 1080p60/4K30, CSI-2</td>
+              <td>Interchangeable lens, low light, pro FPV</td>
+              <td><a href="https://www.arducam.com/" target="_blank" rel="noopener">Arducam</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--camera">Camera</td>
+              <td><strong>Logitech C920</strong></td>
+              <td>$70–$95</td>
+              <td>USB 2.0, 1080p30, H.264 hardware encode, UVC</td>
+              <td>Quick USB fallback, desktop ground station</td>
+              <td><a href="https://www.logitech.com/en-us/products/webcams/c920-hd-pro-webcam.html" target="_blank" rel="noopener">Logitech</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--lorawan">LoRa</td>
+              <td><strong>RAK3172 / RAK4631</strong></td>
+              <td>$20–$50</td>
+              <td>LoRaWAN 1.0.3, 868/915 MHz, STM32WL, UART/USB</td>
+              <td>Long-range backup telemetry, beyond cellular</td>
+              <td><a href://rakwireless.com/" target="_blank" rel="noopener">RAK</a></td>
+            </tr>
+            <tr>
+              <td class="badge category--power">Battery</td>
+              <td><strong>4S LiPo (5200mAh, 25C)</strong></td>
+              <td>$40–$70</td>
+              <td>14.8V nominal, XT60 connector, balance lead</td>
+              <td>Standard quadrotor power, 10–20 min flight</td>
+              <td><a href="https://www.hobbyking.com/" target="_blank" rel="noopener">HobbyKing</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SBC / Companion Computers -->
+  <section id="companion-computers" class="section">
+    <div class="container">
+      <h2>Single Board Computers (SBC) — Companion Computer</h2>
+      <p>The SBC runs the 5G modem, WebRTC video encoder, MAVLink bridge, Tailscale mesh, REST API, SMS beacon, and optional game-controller input. Choose based on your AI/ML, video encoding, and budget needs.</p>
+      <div class="card-grid">
+        <article class="card">
+          <div class="card-header">
+            <h3>Raspberry Pi 5 (8GB)</h3>
+            <span class="price-badge">$80–$100</span>
+          </div>
+          <ul class="specs">
+            <li><strong>CPU:</strong> Broadcom BCM2712, 2.4GHz quad-core ARM Cortex-A76</li>
+            <li><strong>RAM:</strong> 8GB LPDDR4X</li>
+            <li><strong>Expansion:</strong> PCIe Gen 2 x1, 2x micro-HDMI, CSI x2, DSI x2</li>
+            <li><strong>Video:</strong> Hardware H.264/H.265 encode (V4L2M2M)</li>
+            <li><strong>Pros:</strong> Massive ecosystem, cheap, tons of HATs, great driver support</li>
+            <li><strong>Cons:</strong> No NVMe boot on older firmware (fixed on Pi 5), 5V/5A power needed, throttles without active cooling</li>
+            <li><strong>Drone fit:</strong> Best overall value for 5G + WebRTC + MAVLink bridge</li>
+          </ul>
+          <a href="https://www.raspberrypi.com/products/raspberry-pi-5/" class="btn btn--small" target="_blank" rel="noopener">Buy Pi 5</a>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>NVIDIA Jetson Orin Nano Super</h3>
+            <span class="price-badge">$249</span>
+          </div>
+          <ul class="specs">
+            <li><strong>CPU:</strong> ARM Cortex-A78AE (6-core)</li>
+            <li><strong>RAM:</strong> 8GB LPDDR5</li>
+            <li><strong>GPU:</strong> 1024-core Ampere, 67 TOPS AI</li>
+            <li><strong>Video:</strong> NVDEC/NVENC hardware H.264/H.265, 4K60</li>
+            <li><strong>Pros:</strong> Onboard AI/ML (object detection, avoidance), hardware video encode, PCIe Gen 4</li>
+            <li><strong>Cons:</strong> Expensive, larger power draw, bigger footprint</li>
+            <li><strong>Drone fit:</strong> BVLOS with onboard AI, obstacle avoidance, precision landing</li>
+          </ul>
+          <a href="https://www.nvidia.com/en-us/autonomous-machines/jetson-orin-nano-super-developer-kit/" class="btn btn--small" target="_blank" rel="noopener">Buy Jetson</a>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>Odroid M1S</h3>
+            <span class="price-badge">$87</span>
+          </div>
+          <ul class="specs">
+            <li><strong>CPU:</strong> Rockchip RK3576 (4x A76 + 4x A55)</li>
+            <li><strong>RAM:</strong> 4GB or 8GB LPDDR4X</li>
+            <li><strong>Expansion:</strong> M.2 M-key (NVMe), PCIe 2.1, Gigabit Ethernet</li>
+            <li><strong>Video:</strong> Hardware H.264/H.265 encode/decode</li>
+            <li><strong>Pros:</strong> M.2 NVMe boot, low power, eMMC option, good thermal design</li>
+            <li><strong>Cons:</strong> Smaller community than Pi, fewer camera HATs</li>
+            <li><strong>Drone fit:</strong> Low-power long-endurance builds, NVMe storage for logs</li>
+          </ul>
+          <a href="https://www.hardkernel.com/shop/odroid-m1s/" class="btn btn--small" target="_blank" rel="noopener">Buy Odroid</a>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>Orange Pi 5</h3>
+            <span class="price-badge">$72–$110</span>
+          </div>
+          <ul class="specs">
+            <li><strong>CPU:</strong> Rockchip RK3588S (4x A76 + 4x A55, up to 2.4GHz)</li>
+            <li><strong>RAM:</strong> 4GB–32GB LPDDR4X</li>
+            <li><strong>Expansion:</strong> M.2 PCIe 2.1, eSATA, Gigabit Ethernet</li>
+            <li><strong>Video:</strong> 8K video decode, H.264/H.265 encode</li>
+            <li><strong>Pros:</strong> Most RAM for the price, PCIe NVMe, dual Gigabit</li>
+            <li><strong>Cons:</strong> Software maturity lags Pi, fewer drone-specific HATs</li>
+            <li><strong>Drone fit:</strong> Budget builds needing lots of RAM for video buffering</li>
+          </ul>
+          <a href="https://www.orangepi.org/" class="btn btn--small" target="_blank" rel="noopener">Buy Orange Pi</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flight Controllers -->
+  <section id="flight-controllers" class="section">
+    <div class="container">
+      <h2>Flight Controllers (FC) — Split-Brain Architecture</h2>
+      <p>The FC handles low-level motor control, sensor fusion, and failsafe execution. In this project's split-brain design, the FC runs ArduPilot/PX4 and talks MAVLink over serial to the SBC. You can use a commercial autopilot or design a custom FC board.</p>
+      <div class="card-grid">
+        <article class="card">
+          <div class="card-header">
+            <h3>Holybro Pixhawk 6C</h3>
+            <span class="price-badge">$199–$300</span>
+          </div>
+          <ul class="specs">
+            <li><strong>MCU:</strong> STM32H743 (480 MHz)</li>
+            <li><strong>Sensors:</strong> Triple IMU, dual barometer, temperature-compensated</li>
+            <li><strong>IO:</strong> 5x UART, CAN, I2C, SPI, PWM outputs</li>
+            <li><strong>Firmware:</strong> ArduPilot, PX4</li>
+            <li><strong>Pros:</strong> Open-source standard, proven reliability, great docs, RTK-ready</li>
+            <li><strong>Cons:</strong> Expensive for hobby builds, larger than AIO stacks</li>
+            <li><strong>SBC interface:</strong> TELEM2/TELEM4 serial @ 921600 baud to SBC</li>
+          </ul>
+          <a href="https://holybro.com/products/pixhawk-6c" class="btn btn--small" target="_blank" rel="noopener">Buy Pixhawk 6C</a>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>Holybro Pixhawk 6X</h3>
+            <span class="price-badge">$269+</span>
+          </div>
+          <ul class="specs">
+            <li><strong>MCU:</strong> STM32H753 (480 MHz)</li>
+            <li><strong>Sensors:</strong> Triple-redundant IMU, dual baro</li>
+            <li><strong>IO:</strong> 5x UART, dual CAN, Ethernet, RTK</li>
+            <li><strong>Firmware:</strong> ArduPilot, PX4</li>
+            <li><strong>Pros:</strong> Industrial-grade, Ethernet telemetry, vibration-isolated IMU</li>
+            <li><strong>Cons:</strong> Costly, overkill for small frames</li>
+            <li><strong>SBC interface:</strong> TELEM serial or Ethernet to SBC</li>
+          </ul>
+          <a href="https://holybro.com/products/pixhawk-6x" class="btn btn--small" target="_blank" rel="noopener">Buy Pixhawk 6X</a>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>Cube Orange+</h3>
+            <span class="price-badge">$450–$800</span>
+          </div>
+          <ul class="specs">
+            <li><strong>MCU:</strong> STM32H743</li>
+            <li><strong>Sensors:</strong> Triple IMU with vibration isolation & temp control</li>
+            <li><strong>IO:</strong> 80-pin modular connector, dual CAN, extensive PWM</li>
+            <li><strong>Firmware:</strong> ArduPilot, PX4</li>
+            <li><strong>Pros:</strong> Premium reliability, modular carrier boards, commercial/proven</li>
+            <li><strong>Cons:</strong> Very expensive, large</li>
+            <li><strong>SBC interface:</strong> CAN or serial to SBC</li>
+          </ul>
+          <a href="https://cubepilot.org/cube-orange.html" class="btn btn--small" target="_blank" rel="noopener">Buy Cube</a>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>Custom FC Board (with SBC)</h3>
+            <span class="price-badge">$50–$150</span>
+          </div>
+          <ul class="specs">
+            <li><strong>MCU:</strong> STM32F4/F7/H7, ESP32, or RP2040</li>
+            <li><strong>Design:</strong> KiCad open-source PCB, single SBC integration</li>
+            <li><strong>IO:</strong> UART to SBC, PWM to ESCs, I2C/SPI sensors</li>
+            <li><strong>Firmware:</strong> ArduPilot, PX4, or custom</li>
+            <li><strong>Pros:</strong> Tailored form factor, integrated SBC mounting, lowest cost, full control</li>
+            <li><strong>Cons:</strong> Requires PCB design & assembly, no vendor support</li>
+            <li><strong>SBC interface:</strong> Direct UART/USB or shared PCB with SBC</li>
+          </ul>
+          <a href="#custom-fc" class="btn btn--small">Custom FC Guide</a>
+        </article>
+      </div>
+
+      <!-- Custom FC Section -->
+      <div class="callout callout--info" id="custom-fc">
+        <h3>Custom Flight Controller + Single SBC Design</h3>
+        <p>For a truly integrated build, design a single PCB that combines:</p>
+        <ul>
+          <li><strong>FC MCU:</strong> STM32H743 or H753 running ArduPilot/PX4</li>
+          <li><strong>SBC:</strong> Raspberry Pi CM4/CM5 or ODroid module on the same board</li>
+          <li><strong>Interconnect:</strong> Internal UART/USB (no external wires, vibration-resistant)</li>
+          <li><strong>Power:</strong> Shared 5V/3.3V regulators for both FC and SBC</li>
+          <li><strong>Connectors:</strong> PWM out to ESCs, CAN, RC input, telemetry, GPS, battery monitor</li>
+        </ul>
+        <p><strong>Advantages:</strong> No vibration-prone serial cables between SBC and FC, smaller footprint, shared power, single mounting point.</p>
+        <p><strong>Disadvantages:</strong> Single point of failure, harder to upgrade FC or SBC independently, requires PCB design skills.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5G / Cellular -->
+  <section id="5g-modems" class="section">
+    <div class="container">
+      <h2>5G / Cellular Modems — CGNAT Bypass</h2>
+      <p>The drone connects through a Tailscale VPS mesh to bypass CGNAT. You need a 5G modem with a data SIM. eSIM enables remote carrier switching without physical access — critical for BVLOS.</p>
+      <div class="card-grid">
+        <article class="card">
+          <div class="card-header">
+            <h3>Quectel RM520N-GL (eSIM)</h3>
+            <span class="price-badge">$120–$180</span>
+          </div>
+          <ul class="specs">
+            <li><strong>Form:</strong> M.2 B-key (2280/2260/2242)</li>
+            <li><strong>5G:</strong> NSA/SA Sub-6, LTE Cat 20 fallback</li>
+            <li><strong>SIM:</strong> eUICC/eSIM + physical nano-SIM (dual SIM)</li>
+            <li><strong>Interface:</strong> USB 3.1, PCIe, QMI/MBIM/AT</li>
+            <li><strong>Pros:</strong> eSIM remote provisioning, dual-SIM failover, high speed</li>
+            <li><strong>Cons:</strong> eSIM tooling (LPAC/LPA) is complex, firmware can be finicky</li>
+          </ul>
+          <a href="https://quectel.com/" class="btn btn--small" target="_blank" rel="noopener">Quectel RM520N</a>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>Quectel RM500Q-GL</h3>
+            <span class="price-badge">$90–$140</span>
+          </div>
+          <ul class="specs">
+            <li><strong>Form:</strong> M.2 B-key</li>
+            <li><strong>5G:</strong> NSA/SA Sub-6</li>
+            <li><strong>SIM:</strong> Physical nano-SIM</li>
+            <li><strong>Interface:</strong> USB 3.1</li>
+            <li><strong>Pros:</strong> Cheapest 5G option, simple physical SIM</li>
+            <li><strong>Cons:</strong> No eSIM, must swap SIM physically to change carrier</li>
+          </ul>
+          <a href="https://quectel.com/" class="btn btn--small" target="_blank" rel="noopener">Quectel RM500Q</a>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>SIM7600XX-M.2</h3>
+            <span class="price-badge">$60–$100</span>
+          </div>
+          <ul class="specs">
+            <li><strong>Form:</strong> M.2 B-key</li>
+            <li><strong>Network:</strong> LTE Cat 16 (4G), no 5G NR</li>
+            <li><strong>SIM:</strong> Physical nano-SIM</li>
+            <li><strong>Interface:</strong> USB 2.0</li>
+            <li><strong>Pros:</strong> Very cheap, widely supported, GPS included</li>
+            <li><strong>Cons:</strong> 4G only, higher latency than 5G</li>
+          </ul>
+          <a href="https://www.simcom.io/" class="btn btn--small" target="_blank" rel="noopener">SIMCom SIM7600</a>
+        </article>
+      </div>
+
+      <!-- SIM / eSIM options -->
+      <div class="callout callout--warning">
+        <h3>SIM vs eSIM for Drone Use</h3>
+        <table class="data-table">
+          <thead><tr><th>Feature</th><th>Physical SIM</th><th>eSIM</th></tr></thead>
+          <tbody>
+            <tr><td>Carrier change</td><td>Must open drone, swap SIM card</td><td>Remote provisioning over the air</td></tr>
+            <tr><td>Dual carrier</td><td>Dual-SIM modem slot needed</td><td>Multiple eSIM profiles on one eUICC</td></tr>
+            <tr><td>BVLOS friendly</td><td>No — physical access required</td><td>Yes — change carriers mid-mission</td></tr>
+            <tr><td>Setup complexity</td><td>Simple — insert and activate</td><td>Higher — needs LPAC/LPA, SM-DP+ server</td></tr>
+            <tr><td>Recommended for</td><td>Hobby, local flights</td><td>BVLOS, commercial, remote fleets</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Carrier plans -->
+      <div class="callout callout--info">
+        <h3>Carrier Plan Example — Metro by T-Mobile ($20/mo)</h3>
+        <ul>
+          <li><strong>Plan:</strong> Unlimited 5G data, talk & text — $20/month with AutoPay (6-month prepay: $120 upfront)</li>
+          <li><strong>Network:</strong> T-Mobile 5G nationwide</li>
+          <li><strong>Data-only use:</strong> Activate a data-only line for the drone modem; hotspot not needed since modem connects directly</li>
+          <li><strong>SIM:</strong> Order a Metro BYOD SIM kit, activate online, insert into RM500Q/RM520N</li>
+          <li><strong>APN:</strong> Typically <code>fast.metropcs.com</code> or <code>internet</code> — set via <code>AT+CGDCONT</code></li>
+          <li><strong>Note:</strong> Verify 5G coverage at your flight location; data prioritization may apply after 35GB</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- LoRaWAN -->
+  <section id="lorawan" class="section">
+    <div class="container">
+      <h2>LoRaWAN — Long-Range Backup Telemetry</h2>
+      <p>Cellular can fail in remote areas. LoRaWAN provides a low-bandwidth, long-range (1–10 km+) backup telemetry link for failsafe commands and heartbeat.</p>
+      <div class="card-grid">
+        <article class="card">
+          <div class="card-header">
+            <h3>RAK3172 LoRa Module</h3>
+            <span class="price-badge">$20–$35</span>
+          </div>
+          <ul class="specs">
+            <li><strong>MCU:</strong> STM32WL (LoRa + LoRaWAN)</li>
+            <li><strong>Freq:</strong> 868 MHz (EU) / 915 MHz (US)</li>
+            <li><strong>Interface:</strong> UART, USB</li>
+            <li><strong>Range:</strong> 2–5 km (urban), 10+ km (rural LOS)</li>
+            <li><strong>Pros:</strong> Tiny, cheap, ultra-low power</li>
+            <li><strong>Cons:</strong> Very low bandwidth (~5 kbps), telemetry only, no video</li>
+          </ul>
+          <a href="https://rakwireless.com/" class="btn btn--small" target="_blank" rel="noopener">RAK3172</a>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>RAK4631 LoRaWAN Board</h3>
+            <span class="price-badge">$35–$55</span>
+          </div>
+          <ul class="specs">
+            <li><strong>MCU:</strong> nRF52840 + SX1262 LoRa</li>
+            <li><strong>Interface:</strong> USB, Arduino-compatible</li>
+            <li><strong>Pros:</strong> Arduino ecosystem, BLE + LoRa, easy prototyping</li>
+            <li><strong>Cons:</strong> Larger than RAK3172</li>
+            <li><strong>Use:</strong> Ground station gateway or drone backup radio</li>
+          </ul>
+          <a href="https://rakwireless.com/" class="btn btn--small" target="_blank" rel="noopener">RAK4631</a>
+        </article>
+      </div>
+      <p class="note">LoRaWAN requires a gateway (The Things Network, ChirpStack, or your own RAK gateway) to bridge to the internet. Use it for RTH trigger, heartbeat, and SMS beacon fallback — not video.</p>
+    </div>
+  </section>
+
+  <!-- Add-on Boards / HATs -->
+  <section id="addon-boards" class="section">
+    <div class="container">
+      <h2>HATs & Add-on Boards</h2>
+      <div class="card-grid">
+        <article class="card">
+          <div class="card-header">
+            <h3>Waveshare PCIe to M.2 5G HAT (Pi 5)</h3>
+            <span class="price-badge">$40–$60</span>
+          </div>
+          <ul class="specs">
+            <li>M.2 B-key slot for RM500Q/RM520N/SIM82xx</li>
+            <li>USB 3.2, UART, PWR/RST control pins</li>
+            <li>4x MHF4 antenna connectors</li>
+            <li>Pi 5 pogo-pin compatible</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>Sixfab 5G HAT for Pi</h3>
+            <span class="price-badge">$150–$350</span>
+          </div>
+          <ul class="specs">
+            <li>Quectel RM520N/RG520 module options</li>
+            <li>Case + 4 antennas included</li>
+            <li>Sixfab management platform</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>Holybro Pixhawk RPi CM4/CM5 Baseboard</h3>
+            <span class="price-badge">$249+</span>
+          </div>
+          <ul class="specs">
+            <li>Integrates Pi CM4/CM5 with Pixhawk FC</li>
+            <li>Internal FC↔SBC serial, shared power</li>
+            <li>CAN, PWM, telemetry, GPS connectors</li>
+          </ul>
+          <a href="https://holybro.com/products/pixhawk-rpi-cm4-baseboard" class="btn btn--small" target="_blank" rel="noopener">View</a>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>Arduino Nano / Pro Mini</h3>
+            <span class="price-badge">$8–$20</span>
+          </div>
+          <ul class="specs">
+            <li>ATmega328P, 16 MHz</li>
+            <li>ADC for battery/current sensing</li>
+            <li>Simple I2C sensor hub for SBC</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Power & Motors -->
+  <section id="power-train" class="section">
+    <div class="container">
+      <h2>Power Train — Batteries, Motors, ESCs</h2>
+      <div class="card-grid">
+        <article class="card">
+          <div class="card-header">
+            <h3>Battery — 4S LiPo 5200mAh 25C</h3>
+            <span class="price-badge">$40–$70</span>
+          </div>
+          <ul class="specs">
+            <li>14.8V nominal, 16.8V max</li>
+            <li>XT60 power connector, JST-XH balance lead</li>
+            <li>~10–20 min flight time depending on frame</li>
+            <li>LiPo charger + LiPo safe bag required</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>Power Distribution Board (PDB)</h3>
+            <span class="price-badge">$15–$40</span>
+          </div>
+          <ul class="specs">
+            <li>Distributes battery voltage to ESCs</li>
+            <li>Current sensor for battery monitoring</li>
+            <li>5V BEC for SBC/FC power</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>ESC — 4-in-1 50A BLHeli_32</h3>
+            <span class="price-badge">$40–$80</span>
+          </div>
+          <ul class="specs">
+            <li>4x 50A continuous, DShot600/1200</li>
+            <li>Drives 4 brushless motors</li>
+            <li>PWM/DShot input from FC</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="card-header">
+            <h3>Brushless Motor — 2207 1750KV</h3>
+            <span class="price-badge">$25–$45 each</span>
+          </div>
+          <ul class="specs">
+            <li>2207 stator, 1750KV</li>
+            <li>4–6S LiPo compatible</li>
+            <li>~1.5–2 kg thrust each (with right prop)</li>
+            <li>Mount to 5-inch frame</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Build Plans -->
+  <section id="build-plans" class="section section--alt">
+    <div class="container">
+      <h2>Complete Build Plans</h2>
+      <div class="card-grid">
+        <article class="card card--plan">
+          <div class="card-header">
+            <h3>Entry Budget Build (~$450)</h3>
+            <span class="price-badge">~$450</span>
+          </div>
+          <ul class="specs">
+            <li>Raspberry Pi 5 (4GB) — $60</li>
+            <li>SIM7600XX-M.2 4G modem — $80</li>
+            <li>Waveshare 5G HAT — $50</li>
+            <li>Holybro Kakute H7 FC — $80</li>
+            <li>NEO-M9N GPS — $50</li>
+            <li>Pi Camera Module 3 — $30</li>
+            <li>4S LiPo + charger — $60</li>
+            <li>Frame + motors + ESCs — $100</li>
+          </ul>
+        </article>
+        <article class="card card--plan">
+          <div class="card-header">
+            <h3>Recommended BVLOS Build (~$900)</h3>
+            <span class="price-badge">~$900</span>
+          </div>
+          <ul class="specs">
+            <li>Raspberry Pi 5 (8GB) — $90</li>
+            <li>Quectel RM520N-GL (eSIM) — $150</li>
+            <li>Waveshare 5G HAT — $50</li>
+            <li>Holybro Pixhawk 6C — $250</li>
+            <li>H-RTK NEO-F9P Rover — $210</li>
+            <li>Arducam IMX477 HQ — $50</li>
+            <li>4S 5200mAh LiPo + charger — $60</li>
+            <li>Frame, motors, ESCs, misc — $90</li>
+          </ul>
+        </article>
+        <article class="card card--plan">
+          <div class="card-header">
+            <h3>Pro AI BVLOS Build (~$1,600)</h3>
+            <span class="price-badge">~$1,600</span>
+          </div>
+          <ul class="specs">
+            <li>Jetson Orin Nano Super — $249</li>
+            <li>Quectel RM520N-GL (eSIM) — $150</li>
+            <li>M.2 HAT + antennas — $60</li>
+            <li>Holybro Pixhawk 6X — $300</li>
+            <li>H-RTK mosaic-G5 dual-antenna — $579</li>
+            <li>Sony IMX477 / global shutter cam — $150</li>
+            <li>6S LiPo system — $120</li>
+            <li>Carbon frame, motors, ESCs — $200</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Custom Build Design -->
+  <section id="custom-build" class="section">
+    <div class="container">
+      <h2>Complete Custom Build Overview & Design</h2>
+      <div class="build-steps">
+        <div class="step">
+          <h3>1. Frame Selection</h3>
+          <p>5-inch carbon fiber quad (250–350 mm wheelbase) for BVLOS. Options: iFlight, TBS, ImpulseRC, or custom carbon plates.</p>
+        </div>
+        <div class="step">
+          <h3>2. Power System</h3>
+          <p>4S or 6S LiPo → XT60 → PDB with current sensor → 5V BEC for SBC/FC → ESCs → motors.</p>
+        </div>
+        <div class="step">
+          <h3>3. FC + SBC Integration</h3>
+          <p>Mount FC and SBC on vibration-damping plates. Connect FC TELEM to SBC UART @ 921600 baud. Optionally use a custom PCB integrating both.</p>
+        </div>
+        <div class="step">
+          <h3>4. 5G Modem + Antennas</h3>
+          <p>M.2 5G modem on HAT with 4× MIMO antennas mounted on frame arms (away from motors/ESC noise). Connect to Tailscale VPS.</p>
+        </div>
+        <div class="step">
+          <h3>5. Video System</h3>
+          <p>CSI or USB camera → GStreamer H.264 encode → WebRTC via aiortc → ground station. Target 720p30 @ 2–4 Mbps.</p>
+        </div>
+        <div class="step">
+          <h3>6. RC / Game Controller</h3>
+          <p>USB/Bluetooth Xbox/PS controller → evdev/pygame → MAVLink manual control & RC override via SBC to FC.</p>
+        </div>
+        <div class="step">
+          <h3>7. Failsafes</h3>
+          <p>Dynamic RTH on signal loss / low battery / geofence breach. SMS beacon via Twilio or GSM modem. LoRa backup telemetry.</p>
+        </div>
+      </div>
+
+      <div class="wiring-diagram">
+        <h3>System Wiring Overview</h3>
+        <div class="diagram">
+          <div class="node node--battery">Battery (4S/6S LiPo)</div>
+          <div class="node node--pdb">PDB + Current Sensor</div>
+          <div class="node node--esc">4-in-1 ESC</div>
+          <div class="node node--motor">4× Brushless Motors</div>
+          <div class="node node--fc">Flight Controller (STM32)</div>
+          <div class="node node--sbc">SBC (Pi 5 / Jetson)</div>
+          <div class="node node--modem">5G Modem (RM520N)</div>
+          <div class="node node--cam">Camera (CSI/USB)</div>
+          <div class="node node--gps">GPS / RTK</div>
+          <div class="node node--rc">Game Controller (USB/BT)</div>
+          <div class="edge">Power</div>
+          <div class="edge">MAVLink serial</div>
+          <div class="edge">USB / PCIe</div>
+          <div class="edge">CSI / USB</div>
+          <div class="edge">UART / I2C</div>
+          <div class="edge">5G → Tailscale → VPS</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery (placeholders) -->
+  <section id="gallery" class="section">
+    <div class="container">
+      <h2>Build Gallery</h3>
+      <p>Photos of assembled drones, wiring, and HATs go here. Replace <code>docs/images/</code> placeholders with your own images.</p>
+      <div class="gallery-grid">
+        <div class="gallery-item"> <div class="placeholder">Frame + FC</div> </div>
+        <div class="gallery-item"> <div class="placeholder">SBC + 5G Modem</div> </div>
+        <div class="gallery-item"> <div class="placeholder">Wiring harness</div> </div>
+        <div class="gallery-item"> <div class="placeholder">Ground station</div> </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resources -->
+  <section id="resources" class="section">
+    <div class="container">
+      <h2>Hardware Resources & References</h2>
+      <div class="resource-grid">
+        <div class="resource-card">
+          <h4>Flight Controllers</h4>
+          <ul>
+            <li><a href="https://holybro.com/" target="_blank" rel="noopener">Holybro Store</a></li>
+            <li><a href="https://cubepilot.org/" target="_blank" rel="noopener">CubePilot</a></li>
+            <li><a href="https://ardupilot.org/" target="_blank" rel="noopener">ArduPilot Firmware</a></li>
+            <li><a href="https://px4.io/" target="_blank" rel="noopener">PX4 Autopilot</a></li>
+          </ul>
+        </div>
+        <div class="resource-card">
+          <h4>SBCs</h4>
+          <ul>
+            <li><a href="https://www.raspberrypi.com/" target="_blank" rel="noopener">Raspberry Pi</a></li>
+            <li><a href="https://www.nvidia.com/en-us/autonomous-machines/" target="_blank" rel="noopener">NVIDIA Jetson</a></li>
+            <li><a href="https://www.hardkernel.com/" target="_blank" rel="noopener">Hardkernel ODroid</a></li>
+            <li><a href="https://www.orangepi.org/" target="_blank" rel="noopener">Orange Pi</a></li>
+          </ul>
+        </div>
+        <div class="resource-card">
+          <h4>Cellular Modems</h4>
+          <ul>
+            <li><a href="https://quectel.com/" target="_blank" rel="noopener">Quectel 5G Modules</a></li>
+            <li><a href="https://www.simcom.io/" target="_blank" rel="noopener">SIMCom Modules</a></li>
+            <li><a href="https://www.waveshare.com/" target="_blank" rel="noopener">Waveshare HATs</a></li>
+            <li><a href="https://sixfab.com/" target="_blank" rel="noopener">Sixfab Cellular HATs</a></li>
+          </ul>
+        </div>
+        <div class="resource-card">
+          <h4>Carriers & Plans</h4>
+          <ul>
+            <li><a href="https://www.metrobyt-mobile.com/" target="_blank" rel="noopener">Metro by T-Mobile $20/mo</a></li>
+            <li><a href="https://www.t-mobile.com/" target="_blank" rel="noopener">T-Mobile 5G Coverage</a></li>
+            <li><a href="https://www.airalo.com/" target="_blank" rel="noopener">Airalo eSIM</a></li>
+          </ul>
+        </div>
+        <div class="resource-card">
+          <h4>LoRaWAN</h4>
+          <ul>
+            <li><a href="https://rakwireless.com/" target="_blank" rel="noopener">RAKwireless</a></li>
+            <li><a href="https://www.thethingsnetwork.org/" target="_blank" rel="noopener">The Things Network</a></li>
+            <li><a href="https://www.chirpstack.io/" target="_blank" rel="noopener">ChirpStack</a></li>
+          </ul>
+        </div>
+        <div class="resource-card">
+          <h4>Cameras</h4>
+          <ul>
+            <li><a href="https://www.arducam.com/" target="_blank" rel="noopener">Arducam</a></li>
+            <li><a href="https://www.raspberrypi.com/products/camera-module-3/" target="_blank" rel="noopener">Pi Camera 3</a></li>
+            <li><a href="https://openhdfpv.org/2.0/hardware/cameras" target="_blank" rel="noopener">OpenHD Camera List</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>TechTed89 5G Cellular Drone DIY Build — Open source hardware &amp; software. Not for certified aviation use; experimental BVLOS requires appropriate regulatory approvals.</p>
+      <p><a href="https://github.com/techted89/TechTed89-5G-Cellular-Drone-DIY-Build" target="_blank" rel="noopener">GitHub Repo</a> · <a href="index.html">Back to top</a></p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

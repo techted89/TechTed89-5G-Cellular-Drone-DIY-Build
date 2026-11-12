@@ -1,0 +1,247 @@
+# Shared configuration for 5G Drone System
+# This file is used by SBC, FC, and Ground Station
+
+network:
+  # Tailscale configuration
+  tailscale:
+    auth_key_env: "TAILSCALE_AUTH_KEY"  # Set via environment variable
+    hostname: "drone-sbc"               # Will be overridden per device
+    advertise_routes:
+      - "10.0.0.0/8"
+      - "192.168.0.0/16"
+    accept_routes: true
+    accept_dns: false
+    ssh: true
+    state_dir: "/var/lib/tailscale"
+    socket: "/var/run/tailscale/tailscaled.sock"
+  
+  # WebRTC signaling
+  webrtc:
+    stun_servers:
+      - "stun:stun.l.google.com:19302"
+      - "stun:stun1.l.google.com:19302"
+    turn_servers: []  # Configure if needed
+    ice_candidate_timeout: 5000
+    connection_timeout: 10000
+    data_channel_ordered: true
+    data_channel_max_retransmits: 0
+  
+  # MAVLink serial connection (SBC <-> FC)
+  mavlink:
+    device: "/dev/ttyTHS1"  # Jetson UART, change for other SBCs
+    baudrate: 921600
+    source_system: 1      # SBC system ID
+    source_component: 191 # MAV_COMP_ID_COMPANION_COMPUTER
+    target_system: 1      # FC system ID
+    target_component: 1   # FC component ID (autopilot)
+    heartbeat_interval: 1000  # ms
+    stream_rates:
+      - msg_id: 0    # HEARTBEAT
+        rate: 10
+      - msg_id: 30   # ATTITUDE
+        rate: 50
+      - msg_id: 33   # GLOBAL_POSITION_INT
+        rate: 10
+      - msg_id: 74   # VFR_HUD
+        rate: 10
+      - msg_id: 147  # BATTERY_STATUS
+        rate: 5
+      - msg_id: 65   # RC_CHANNELS
+        rate: 20
+  
+  # Ground station connection
+  ground_station:
+    host: "0.0.0.0"
+    telemetry_port: 14550
+    webrtc_port: 8080
+    api_port: 8081
+    web_ui_port: 8082
+
+video:
+  # Camera configuration
+  camera:
+    device: "/dev/video0"
+    width: 1280
+    height: 720
+    fps: 30
+    format: "YUYV"
+    bitrate: 4000000  # 4 Mbps
+    keyframe_interval: 30
+    codec: "H264"     # H264, H265, VP8, VP9
+    encoder: "v4l2h264enc"  # GStreamer encoder element
+  
+  # WebRTC video settings
+  webrtc_video:
+    min_bitrate: 500000
+    max_bitrate: 8000000
+    start_bitrate: 4000000
+    fps: 30
+    resolution: "1280x720"
+    simulcast: false
+    nack_enabled: true
+    pli_enabled: true
+    fir_enabled: true
+
+failsafe:
+  # Dynamic Return-to-Home configuration
+  rth:
+    enabled: true
+    trigger_conditions:
+      - "signal_loss"
+      - "low_battery"
+      - "geofence_breach"
+      - "manual_trigger"
+      - "critical_failure"
+    min_rth_altitude: 30.0      # meters
+    max_rth_altitude: 120.0     # meters
+    default_rth_altitude: 50.0  # meters
+    descent_rate: 2.0           # m/s
+    approach_speed: 8.0         # m/s
+    loiter_radius: 10.0         # meters
+    landing_approach_angle: 15.0  # degrees
+    precision_landing:
+      enabled: false
+      marker_id: 0
+      search_radius: 5.0
+    obstacle_avoidance:
+      enabled: false
+      clearance: 5.0
+      sensor_type: "lidar"  # lidar, stereo, tof
+  
+  # Battery failsafe
+  battery:
+    critical_voltage: 14.8       # 4S LiPo critical (V)
+    warning_voltage: 15.6        # 4S LiPo warning (V)
+    rth_voltage: 15.2            # Trigger RTH at this voltage
+    capacity_margin: 0.15        # 15% margin
+    current_limit: 80.0          # Amps
+  
+  # Signal failsafe
+  signal:
+    telemetry_timeout: 3.0       # seconds
+    control_timeout: 2.0         # seconds
+    video_timeout: 5.0           # seconds
+    rssi_threshold: -85          # dBm
+    snr_threshold: 10            # dB
+  
+  # Geofence
+  geofence:
+    enabled: true
+    max_radius: 5000.0           # meters from home
+    max_altitude: 120.0          # meters AGL
+    min_altitude: 1.0            # meters AGL
+    polygon_enabled: false
+    polygon_points: []           # [lat, lon] pairs
+  
+  # Emergency SMS
+  sms:
+    enabled: true
+    provider: "twilio"  # twilio, modem, email2sms
+    twilio:
+      account_sid_env: "TWILIO_ACCOUNT_SID"
+      auth_token_env: "TWILIO_AUTH_TOKEN"
+      from_number_env: "TWILIO_FROM_NUMBER"
+    modem:
+      device: "/dev/ttyUSB0"
+      baudrate: 115200
+      apn: "internet"
+    recipients:
+      - "+15551234567"
+      - "+15559876543"
+    templates:
+      critical: "CRITICAL: Drone {drone_id} at {lat},{lon} alt={alt}m - {reason}"
+      warning: "WARNING: Drone {drone_id} - {reason}"
+      info: "INFO: Drone {drone_id} - {reason}"
+
+api:
+  # REST API configuration
+  rest:
+    host: "0.0.0.0"
+    port: 8081
+    cors_origins:
+      - "*"
+    rate_limit: 100
+    auth:
+      enabled: true
+      jwt_secret_env: "JWT_SECRET"
+      token_expiry: 3600
+  
+  # WebSocket for real-time telemetry
+  websocket:
+    host: "0.0.0.0"
+    port: 8083
+    ping_interval: 30
+    ping_timeout: 10
+
+drone:
+  id: "drone-001"
+  name: "5G-Drone-1"
+  type: "quadrotor"
+  firmware_version: "1.0.0"
+  hardware_version: "1.0"
+
+controller:
+  # Game controller (USB/Bluetooth) for manual drone control
+  enabled: true
+  backend: "auto"  # evdev, pygame, auto
+  device_path: "/dev/input/js0"  # For evdev backend
+  joystick_id: 0  # For pygame backend
+  type: "generic"  # xbox, playstation, generic, custom
+  poll_rate: 50  # Hz
+  
+  # Button mapping (auto-detected for known controllers)
+  # Override any mapping here for custom controllers
+  mapping:
+    axis_left_x: 0
+    axis_left_y: 1
+    axis_right_x: 2
+    axis_right_y: 3
+    axis_lt: 4
+    axis_rt: 5
+    btn_a: 0
+    btn_b: 1
+    btn_x: 2
+    btn_y: 3
+    btn_lb: 4
+    btn_rb: 5
+    btn_back: 6
+    btn_start: 7
+    btn_lstick: 8
+    btn_rstick: 9
+    btn_dpad_up: 10
+    btn_dpad_down: 11
+    btn_dpad_left: 12
+    btn_dpad_right: 13
+    invert_left_y: true
+    invert_right_y: true
+    invert_right_x: false
+    deadzone: 0.1
+    max_roll: 1000
+    max_pitch: 1000
+    max_yaw: 1000
+    max_throttle: 1000
+  
+  # Control mode settings
+  takeoff_altitude: 10.0  # meters
+  arm_hold_time: 1.0  # seconds to hold arm button
+  
+  # Flight modes for mode switching (ArduPilot mode numbers)
+  modes:
+    - 0   # STABILIZE
+    - 4   # GUIDED
+    - 5   # LOITER
+    - 6   # RTL
+    - 9   # AUTO
+    - 11  # POSHOLD
+    - 15  # SPORT
+  
+  # RC channel mapping for override (1-indexed)
+  rc_channels:
+    roll: 1
+    pitch: 2
+    throttle: 3
+    yaw: 4
+    mode: 5
+    aux1: 6
+    aux2: 7
+    aux3: 8
